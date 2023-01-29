@@ -3,7 +3,6 @@
 
 #include "Agents/TestAgent.h"
 
-// Sets default values
 ATestAgent::ATestAgent()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,6 +12,8 @@ ATestAgent::ATestAgent()
 
 	testAgentMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("testMesh"));
 	testAgentMesh->SetupAttachment(GetRootComponent());
+	
+	setPosition(GetActorLocation());
 }
 
 void ATestAgent::BeginPlay()
@@ -24,11 +25,18 @@ void ATestAgent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AddActorWorldOffset(FVector(1.f, 0.f, 0.f));
+	moveAgent(FVector(1.f, 1.f, 0.f));
+	FVector forward = GetActorForwardVector();
+	DB_SF_DRAW_VECTOR(m_tPosition, m_tPosition + forward * 200.f);
+}
+
+void ATestAgent::moveAgent(FVector direction)
+{
+	AddActorWorldOffset(direction);
+	setPosition(m_tPosition + direction);
 }
 
 void ATestAgent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-
